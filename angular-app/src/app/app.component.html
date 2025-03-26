@@ -1,39 +1,4 @@
-<nav class="navbar">
-  <ul>
-    <li><a href="#">Accueil</a></li>
-    <li><a href="#">Nos Recettes</a></li>
-    <li><a href="#">À Propos</a></li>
-  </ul>
-  <div class="icons">
-      <img src="../../../../../public/favorite.png" alt="Heart Icon">
-      <img src="../public/account_circle.png" alt="Account Icon">
-  </div>
-</nav>
-
-<header>
-  <h1>Titre</h1>
-  <p>Phrase pour combler je trouverais après</p>
-  <button> Bouton </button>
-</header>
-
-<section>
-  <h2>Les recettes du moment :</h2>
-  <div class="recipes">
-    <div *ngFor="let recipe of recipes" class="recipe-card">
-      <img [src]="recipe.image" [alt]="recipe.name">
-      <p>{{ recipe.name }}</p>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h2>Astuces</h2>
-  <div class="tips">
-    <div *ngFor="let tip of tips" class="tip-card"> 
-      <h3>{{ tip.title }}</h3>
-      <p>{{ tip.content }}</p>
-    </div>
-  </div>
-</section>
-
-<!-- <router-outlet /> -->
+<app-navbar></app-navbar>
+<main class="container mx-auto px-4 py-8">
+  <router-outlet></router-outlet>
+</main>

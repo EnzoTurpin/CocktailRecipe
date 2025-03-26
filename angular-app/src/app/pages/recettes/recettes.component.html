@@ -1,0 +1,61 @@
+<!-- Hero Section avec effet parallax -->
+<div class="hero-section relative h-[500px] overflow-hidden">
+  <div
+    class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    [style.transform]="'translateY(' + parallaxOffset + 'px)'"
+    style="background-image: url('assets/images/background-bg.jpg')"
+  >
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  </div>
+  <div
+    class="relative h-full flex flex-col items-center justify-center text-white px-4"
+  >
+    <h1 class="text-5xl font-bold mb-8">Nos Recettes de Cocktails</h1>
+    <div class="w-full max-w-2xl">
+      <div class="relative">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Rechercher une recette..."
+          class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        />
+        <svg
+          class="absolute right-3 top-3 h-6 w-6 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Section des recettes -->
+<div class="container mx-auto px-4 py-12">
+  <h2 class="text-3xl font-bold text-gray-900 mb-8">Recettes de Saison</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div
+      *ngFor="let recette of filteredRecettes"
+      class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+    >
+      <img
+        [src]="recette.image"
+        [alt]="recette.nom"
+        class="w-full h-48 object-cover"
+      />
+      <div class="p-6">
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">
+          {{ recette.nom }}
+        </h3>
+        <p class="text-gray-600">{{ recette.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

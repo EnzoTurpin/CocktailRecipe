@@ -1,8 +1,9 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+// src/app/app.config.ts
+import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
 
-import { routes } from './app.routes';
-
-export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
-};
+// Vous pouvez nommer cette constante différemment pour éviter le conflit :
+export const appConfigRoutes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: '**', redirectTo: '' },
+];
