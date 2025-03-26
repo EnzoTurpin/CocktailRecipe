@@ -1,85 +1,140 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { ScrollService } from '../../services/scroll.service';
 
 interface Recette {
-  id: number;
-  nom: string;
-  image: string;
+  id: string;
+  name: string;
   description: string;
+  image: string;
+  difficulty: 'Facile' | 'Moyen' | 'Difficile';
+  preparationTime: string;
 }
 
 @Component({
   selector: 'app-recettes',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './recettes.component.html',
   styleUrls: ['./recettes.component.css'],
 })
 export class RecettesComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
+  showSuggestions: boolean = false;
+  suggestions: Recette[] = [];
   parallaxOffset: number = 0;
-  private scrollListener: () => void;
 
   recettes: Recette[] = [
     {
-      id: 1,
-      nom: 'Mojito',
-      image: 'assets/images/mojito.jpg',
-      description: 'Un cocktail rafraîchissant à base de rhum et de menthe',
-    },
-    {
-      id: 2,
-      nom: 'Piña Colada',
-      image: 'assets/images/pina-colada.jpg',
+      id: 'mojito',
+      name: 'Mojito',
       description:
-        "Un cocktail tropical à base de rhum, de lait de coco et de jus d'ananas",
+        'Un cocktail rafraîchissant à base de rhum blanc, menthe fraîche et citron vert.',
+      image:
+        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
+      difficulty: 'Facile',
+      preparationTime: '5 min',
     },
     {
-      id: 3,
-      nom: 'Margarita',
-      image: 'assets/images/margarita.jpg',
-      description: 'Un cocktail mexicain à base de tequila et de citron vert',
+      id: 'pina-colada',
+      name: 'Piña Colada',
+      description:
+        "Un cocktail tropical crémeux à base de rhum blanc, lait de coco et jus d'ananas.",
+      image:
+        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
+      difficulty: 'Facile',
+      preparationTime: '5 min',
     },
     {
-      id: 4,
-      nom: 'Old Fashioned',
-      image: 'assets/images/old-fashioned.jpg',
-      description: "Un cocktail classique à base de whisky et d'angostura",
+      id: 'margarita',
+      name: 'Margarita',
+      description:
+        'Un cocktail mexicain classique à base de tequila, triple sec et jus de citron.',
+      image:
+        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
+      difficulty: 'Moyen',
+      preparationTime: '5 min',
     },
     {
-      id: 5,
-      nom: 'Daiquiri',
-      image: 'assets/images/daiquiri.jpg',
-      description: 'Un cocktail cubain à base de rhum et de citron vert',
+      id: 'old-fashioned',
+      name: 'Old Fashioned',
+      description:
+        'Un cocktail sophistiqué à base de whisky, bitters et sucre.',
+      image:
+        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
+      difficulty: 'Difficile',
+      preparationTime: '5 min',
     },
     {
-      id: 6,
-      nom: 'Cosmopolitan',
-      image: 'assets/images/cosmopolitan.jpg',
-      description: 'Un cocktail élégant à base de vodka et de cranberry',
+      id: 'daiquiri',
+      name: 'Daiquiri',
+      description:
+        'Un cocktail cubain classique à base de rhum blanc, jus de citron vert et sucre.',
+      image:
+        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
+      difficulty: 'Facile',
+      preparationTime: '5 min',
+    },
+    {
+      id: 'cosmopolitan',
+      name: 'Cosmopolitan',
+      description:
+        'Un cocktail élégant à base de vodka, triple sec et jus de canneberge.',
+      image:
+        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
+      difficulty: 'Moyen',
+      preparationTime: '5 min',
     },
   ];
 
-  constructor() {
-    this.scrollListener = () => {
-      const scrolled = window.pageYOffset;
-      this.parallaxOffset = scrolled * 0.5;
-    };
-  }
+  constructor(private router: Router, private scrollService: ScrollService) {}
 
   ngOnInit() {
-    window.addEventListener('scroll', this.scrollListener);
+    window.addEventListener('scroll', this.onScroll.bind(this));
   }
 
   ngOnDestroy() {
-    window.removeEventListener('scroll', this.scrollListener);
+    window.removeEventListener('scroll', this.onScroll.bind(this));
+  }
+
+  private onScroll() {
+    this.parallaxOffset = window.scrollY * 0.5;
+  }
+
+  onSearchInput() {
+    if (this.searchTerm.length > 0) {
+      this.suggestions = this.recettes.filter(
+        (recette) =>
+          recette.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          recette.description
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
+      );
+      this.showSuggestions = true;
+    } else {
+      this.suggestions = [];
+      this.showSuggestions = false;
+    }
+  }
+
+  onSearchSubmit() {
+    this.showSuggestions = false;
+    // Ici, vous pouvez ajouter la logique de navigation vers la page de résultats
+    // this.router.navigate(['/resultats'], { queryParams: { q: this.searchTerm } });
+  }
+
+  navigateToCocktail(id: string) {
+    this.scrollService.scrollToTop();
+    this.router.navigate(['/cocktail', id]);
   }
 
   get filteredRecettes(): Recette[] {
+    if (!this.searchTerm) return this.recettes;
     return this.recettes.filter(
       (recette) =>
-        recette.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        recette.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         recette.description
           .toLowerCase()
           .includes(this.searchTerm.toLowerCase())

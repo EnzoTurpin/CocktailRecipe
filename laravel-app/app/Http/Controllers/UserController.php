@@ -5,109 +5,136 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Scripts\ResponseApi;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Affiche une liste des utilisateurs avec pagination
      */
     public function index()
     {
-        $users = User::paginate(15); // Get users from the DB and display them by 15 per page
+        $users = User::paginate(15);
 
         return response()->json($users);
     }
 
-    
-    private function validateUser(Request $request, $userId = null)
+    /**
+     * Valide les données utilisateur
+     */
+    private function create(Request $request, $userId = null)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'email' =>
-                'required|email',
-                Rule::unique('users')->ignore($userId),
-            'password' => 'required|min:6|confirmed',
-        ];
-
-        $messages = [
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($userId)
+            ],
+            'password' => $userId ? 'nullable|string|min:6|confirmed' : 'required|string|min:6|confirmed',
+        ], [
             'name.required' => 'Le champ nom est obligatoire.',
             'email.required' => 'Le champ email est obligatoire.',
             'email.email' => 'L\'adresse email doit être valide.',
             'password.required' => 'Le mot de passe est obligatoire.',
             'password.confirmed' => 'Les mots de passe ne correspondent pas.'
-        ];
-
-        return $request->validate($rules, $messages);
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Création d'un utilisateur
      */
     public function store(Request $request)
     {
-        $validatedUser = $this->validateUser($request); // Confirm the data from the request
-        $validatedUser['password'] = bcrypt($validatedUser['password']); // Hash the password
+        $validatedUser = $this->create($request);
 
-        User::create($validatedUser); // Create the user in the DB
+        // User creation
+        $user = User::create($validatedUser);
 
-        return response()->json(['message' => 'User created successfully.']);
+        // Response in json format
+        return ResponseApi::sendApiResponse('success', 'Utilisateur créé avec succès !', ['user' => $user], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Affiche un utilisateur spécifique
      */
     public function show(string $id)
     {
-        $user = User::findOrFail($id);
-
-        return response()->json($user);
+        try {
+            $user = User::where('_id', $id)->firstOrFail();
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return ResponseApi::sendApiResponse('fail', 'Utilisateur non trouvé', null,404);
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mise à jour des informations utilisateur
      */
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6|confirmed',
-        ]);
+        $validatedData = $this->create($request, $user->id);
 
-        $user->update($validatedData);
+        if (!empty($validatedData['password'])) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        } else {
+            unset($validatedData['password']);
+        }
 
-        return response()->json(['message' => 'Profile updated successfully.']);
-    }
-
-    public function create()
-    {
-        return response()->json(['message' => 'User created successfully.']);
-    }
-
-    public function edit()
-    {
-        $user = Auth::user();
-        return response()->json(['user' => $user, 'message' => 'User updated successfully.']);
+        return ResponseApi::sendApiResponse('success', 'Profil mis à jour avec succès.', $validatedData,0);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprime un utilisateur
      */
     public function destroy(string $id)
     {
-        User::findOrFail($id)->delete();
+        if(!Auth::check()) {
+            return ResponseApi::sendApiResponse('fail','Vous devez êtres connecté pour supprimer votre profil', null,404);
+        }
 
-        return response()->json(['message' => 'User deleted successfully.']);
+        $user = User::findOrFail($id);
+
+        if(Auth::id() !== $user->id  && Auth::user()->user_type !== 'admin') {
+            return ResponseApi::sendApiResponse('fail','Vous ne pouvez pas supprimer un autre utilisateur', null,403);
+        } else {
+            $user->delete();
+            Auth::logout();
+
+            return ResponseApi::sendApiResponse('success','Profil supprimé avec succès, Vous allez être redirigé vers l\'accueil', null,0);
+        }
     }
 
-    private function ban($id) {
-        $user = User::findOrFail($id);
-        $user->banned = true;
-        $user->save();
+    /**
+     * Bannir un utilisateur
+     */
+    public function ban(string $id)
+    {
+        if(!Auth::check()) {
+            return ResponseApi::sendApiResponse('fail','Vous devez être connecté pour effectuer cette action.', null,401);
+        }
 
-        return response()->json(['message' => 'User banned successfully.']);
+        $admin = Auth::user();
+
+        if($admin->user_type !== 'admin') {
+            return ResponseApi::sendApiResponse('fail','Vous n\'avez pas les droits pour effectuer cette action.', null,403);
+        } else {
+            try {
+                $user = User::findOrFail($id);
+                $updated = $user->update(['banned' => true]);
+
+                if(!$updated) {
+                    return ResponseApi::sendApiResponse('fail','Une erreur est survenue lors du bannissement de l\'utilisateur.', null,500);
+                } else {
+                    return ResponseApi::sendApiResponse('success','Utilisateur banni avec succès.', null,0);
+                }
+            } catch (\Exception $e) {
+                return ResponseApi::sendApiResponse('fail','Utilisateur non trouvé.', null,404);
+            }
+        }
     }
 }

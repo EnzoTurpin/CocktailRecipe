@@ -1,10 +1,10 @@
-<nav class="bg-white shadow-lg">
+<nav class="bg-color-blanc-custom shadow-custom">
   <div class="max-w-7xl mx-auto px-4">
     <div class="flex justify-between h-16">
       <div class="flex">
         <!-- Logo -->
         <div class="flex-shrink-0 flex items-center">
-          <a routerLink="/" class="text-2xl font-bold text-purple-600"
+          <a routerLink="/" class="text-2xl font-bold text-tropical-vibes"
             >CocktailApp</a
           >
         </div>
@@ -13,34 +13,44 @@
         <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
           <a
             routerLink="/"
-            routerLinkActive="border-purple-500 text-gray-900"
+            routerLinkActive="border-tropical-vibes text-gray-900"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:border-couleur-secondaire hover:text-tropical-vibes"
           >
             Accueil
           </a>
           <a
             routerLink="/recettes"
-            routerLinkActive="border-purple-500 text-gray-900"
-            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+            routerLinkActive="border-tropical-vibes text-gray-900"
+            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:border-couleur-secondaire hover:text-tropical-vibes"
           >
             Nos Recettes
           </a>
           <a
             routerLink="/about"
-            routerLinkActive="border-purple-500 text-gray-900"
-            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+            routerLinkActive="border-tropical-vibes text-gray-900"
+            class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-transparent text-gray-500 hover:border-couleur-secondaire hover:text-tropical-vibes"
           >
             À propos
           </a>
         </div>
       </div>
 
+      <!-- Login Button Desktop -->
+      <div class="hidden sm:flex sm:items-center">
+        <a
+          routerLink="/login"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-tropical-vibes hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tropical-vibes"
+        >
+          Se connecter
+        </a>
+      </div>
+
       <!-- Mobile menu button -->
       <div class="flex items-center sm:hidden">
         <button
           (click)="toggleMenu()"
-          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500"
+          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-tropical-vibes hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-couleur-accent"
         >
           <span class="sr-only">Open main menu</span>
           <svg
@@ -83,25 +93,31 @@
     <div class="pt-2 pb-3 space-y-1">
       <a
         routerLink="/"
-        routerLinkActive="bg-purple-50 border-purple-500 text-purple-700"
+        routerLinkActive="bg-color-blanc-custom border-tropical-vibes text-tropical-vibes"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-500 hover:bg-color-blanc-custom hover:border-couleur-secondaire hover:text-tropical-vibes"
       >
         Accueil
       </a>
       <a
         routerLink="/recettes"
-        routerLinkActive="bg-purple-50 border-purple-500 text-purple-700"
-        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+        routerLinkActive="bg-color-blanc-custom border-tropical-vibes text-tropical-vibes"
+        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-500 hover:bg-color-blanc-custom hover:border-couleur-secondaire hover:text-tropical-vibes"
       >
         Nos Recettes
       </a>
       <a
         routerLink="/about"
-        routerLinkActive="bg-purple-50 border-purple-500 text-purple-700"
-        class="block pl-3 pr-4 py-4 border-l-4 text-base font-medium border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+        routerLinkActive="bg-color-blanc-custom border-tropical-vibes text-tropical-vibes"
+        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-500 hover:bg-color-blanc-custom hover:border-couleur-secondaire hover:text-tropical-vibes"
       >
         À propos
+      </a>
+      <a
+        routerLink="/login"
+        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-tropical-vibes hover:bg-color-blanc-custom hover:border-couleur-secondaire"
+      >
+        Se connecter
       </a>
     </div>
   </div>
