@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ScrollService } from '../../services/scroll.service';
 
 interface Ingredient {
   name: string;
@@ -31,7 +32,11 @@ interface Cocktail {
 export class CocktailDetailsComponent implements OnInit {
   cocktail: Cocktail | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private scrollService: ScrollService
+  ) {}
 
   ngOnInit() {
     // Récupérer l'ID du cocktail depuis l'URL
@@ -40,7 +45,12 @@ export class CocktailDetailsComponent implements OnInit {
       // Simuler la récupération des données du cocktail
       // À remplacer par un appel API réel
       this.cocktail = this.getCocktailDetails(id);
+      this.scrollService.scrollToTop();
     }
+  }
+
+  goBack() {
+    window.history.back();
   }
 
   private getCocktailDetails(id: string): Cocktail | null {

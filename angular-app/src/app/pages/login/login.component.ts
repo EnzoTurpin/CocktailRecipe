@@ -1,32 +1,41 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone: true,
-  imports: [CommonModule, FormsModule],
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  rememberMe: boolean = false;
+  credentials = {
+    email: '',
+    password: '',
+  };
+  error: string = '';
+  loading: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmit(): void {
-    // TODO: Implémenter la logique de connexion
-    console.log('Login attempt:', {
-      email: this.email,
-      password: this.password,
-      rememberMe: this.rememberMe,
-    });
-  }
+  onSubmit() {
+    this.loading = true;
+    this.error = '';
 
-  goToRegister(): void {
-    this.router.navigate(['/register']);
+    this.authService
+      .login(this.credentials.email, this.credentials.password)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          this.error =
+            err.error.message || 'Une erreur est survenue lors de la connexion';
+          this.loading = false;
+        },
+      });
   }
 }
