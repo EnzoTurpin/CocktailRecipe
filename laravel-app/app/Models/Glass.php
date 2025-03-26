@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
-class Ingredients extends Model
+class Glass extends Model
 {
     use HasFactory;
 
     protected $connection = 'mongodb';
 
-    protected $collection = 'ingredients';
+    protected $collection = 'glasses';
 
     protected $fillable = [
         'name',
