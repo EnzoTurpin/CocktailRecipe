@@ -1,12 +1,22 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  standalone: true,  // Ensure it's a standalone component
+  imports: [CommonModule],  // ✅ Import CommonModule for *ngFor
 })
 export class AppComponent {
-  title = 'angular-app';
+  recipes = [
+    { name: 'Margarita', image: 'path/to/margarita.jpg' },
+    { name: 'Old Fashioned', image: 'path/to/old-fashioned.jpg' },
+    { name: 'Mojito', image: 'path/to/mojito.jpg' }
+  ];
+
+  tips = [
+    { title: 'Comment battre avec un fouet', content: 'Lorem ipsum dolor sit amet...' },
+    { title: 'Cocktail végétalien', content: 'Lorem ipsum dolor sit amet...' }
+  ];
 }
