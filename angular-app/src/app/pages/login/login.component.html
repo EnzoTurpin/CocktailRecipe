@@ -17,38 +17,46 @@
       </p>
     </div>
     <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <label for="email" class="sr-only">Adresse email</label>
+      <div class="rounded-md shadow-sm space-y-4">
+        <div class="relative">
           <input
             id="email"
             name="email"
             type="email"
             required
             [(ngModel)]="credentials.email"
-            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes focus:z-10 sm:text-sm"
-            placeholder="Adresse email"
+            class="block w-full px-3 pt-6 pb-1 text-gray-900 bg-transparent border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes peer"
+            placeholder=" "
           />
+          <label
+            for="email"
+            class="absolute text-sm text-gray-500 duration-150 transform scale-100 top-2 origin-[0] left-2.5 peer-focus:text-tropical-vibes peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:translate-x-0 peer-focus:text-xs peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 z-10 px-1 bg-color-blanc-custom"
+            >Adresse email</label
+          >
         </div>
-        <div>
-          <label for="password" class="sr-only">Mot de passe</label>
+        <div class="relative">
           <input
             id="password"
             name="password"
             type="password"
             required
             [(ngModel)]="credentials.password"
-            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes focus:z-10 sm:text-sm"
-            placeholder="Mot de passe"
+            class="block w-full px-3 pt-6 pb-1 text-gray-900 bg-transparent border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes peer"
+            placeholder=" "
           />
+          <label
+            for="password"
+            class="absolute text-sm text-gray-500 duration-150 transform scale-100 top-2 origin-[0] left-2.5 peer-focus:text-tropical-vibes peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:translate-x-0 peer-focus:text-xs peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 z-10 px-1 bg-color-blanc-custom"
+            >Mot de passe</label
+          >
         </div>
       </div>
 
-      <div *ngIf="error" class="text-red-500 text-sm text-center">
+      <div *ngIf="error" class="text-red-500 text-sm text-center mt-4">
         {{ error }}
       </div>
 
-      <div>
+      <div class="mt-6">
         <button
           type="submit"
           [disabled]="loading"

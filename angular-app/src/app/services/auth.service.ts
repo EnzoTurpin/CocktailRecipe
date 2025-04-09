@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 export interface User {
   _id?: string;
@@ -19,13 +19,29 @@ export interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api'; // URL de votre API backend
+  private apiUrl = 'http://localhost:8000/api'; // URL de l'API Laravel
   private tokenKey = 'auth_token';
 
   constructor(private http: HttpClient) {}
 
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Une erreur est survenue';
+
+    if (error.error instanceof ErrorEvent) {
+      // Erreur côté client
+      errorMessage = error.error.message;
+    } else {
+      // Erreur côté serveur
+      errorMessage = error.error.message || `Code d'erreur: ${error.status}`;
+    }
+
+    return throwError(() => new Error(errorMessage));
+  }
+
   register(user: User): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, user);
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/auth/register`, user)
+      .pipe(catchError(this.handleError));
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -34,7 +50,8 @@ export class AuthService {
       .pipe(
         tap((response) => {
           localStorage.setItem(this.tokenKey, response.token);
-        })
+        }),
+        catchError(this.handleError)
       );
   }
 

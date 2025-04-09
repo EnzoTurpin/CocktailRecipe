@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollService } from '../../services/scroll.service';
@@ -29,7 +29,7 @@ interface Cocktail {
   templateUrl: './cocktail-details.component.html',
   styleUrls: ['./cocktail-details.component.css'],
 })
-export class CocktailDetailsComponent implements OnInit {
+export class CocktailDetailsComponent implements OnInit, AfterViewInit {
   cocktail: Cocktail | null = null;
 
   constructor(
@@ -39,14 +39,22 @@ export class CocktailDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Forcer le scroll immédiatement (sans animation)
+    this.scrollService.scrollToTopImmediate();
+
     // Récupérer l'ID du cocktail depuis l'URL
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       // Simuler la récupération des données du cocktail
-      // À remplacer par un appel API réel
       this.cocktail = this.getCocktailDetails(id);
-      this.scrollService.scrollToTop();
     }
+  }
+
+  ngAfterViewInit() {
+    // S'assurer que le scroll est bien au top après le rendu de la vue
+    setTimeout(() => {
+      this.scrollService.scrollToTopForce();
+    }, 100);
   }
 
   goBack() {
