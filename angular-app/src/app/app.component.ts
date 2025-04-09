@@ -1,16 +1,18 @@
 // src/app/app.component.ts
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { routes } from './app-routing.module';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, NavbarComponent],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  imports: [RouterOutlet, NavbarComponent],
+  template: `
+    <app-navbar></app-navbar>
+    <router-outlet></router-outlet>
+  `,
+  styles: [],
 })
 export class AppComponent {
-  title = 'Cocktail Recipe';
+  title = 'CocktailApp';
 }

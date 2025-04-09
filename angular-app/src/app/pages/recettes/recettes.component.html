@@ -37,7 +37,7 @@
           (click)="onSearchSubmit()"
           class="absolute right-4 top-1/2 -translate-y-1/2 bg-tropical-vibes text-white px-6 py-2 rounded-full hover:bg-opacity-90 transition-colors"
         >
-          Rechercher
+          <i class="bx bx-search"></i> Rechercher
         </button>
       </div>
 
@@ -76,7 +76,7 @@
 <!-- Section des recettes -->
 <section class="py-16 bg-color-blanc-custom">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold color-tropical-vibes text-center mb-12">
+    <h2 class="text-3xl font-bold text-tropical-vibes text-center mb-12">
       Nos Recettes
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -91,7 +91,9 @@
             class="w-full h-64 object-cover"
           />
           <div class="p-6">
-            <h3 class="text-xl font-semibold mb-2">{{ recette.name }}</h3>
+            <h3 class="text-xl font-semibold text-tropical-vibes mb-2">
+              {{ recette.name }}
+            </h3>
             <p class="text-gray-600 mb-4">{{ recette.description }}</p>
             <div class="flex items-center justify-between">
               <span

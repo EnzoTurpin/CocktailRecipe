@@ -1,39 +1,53 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
-  name: string = '';
-  email: string = '';
-  password: string = '';
-  confirmPassword: string = '';
-  acceptTerms: boolean = false;
+  user = {
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  };
+  error: string = '';
+  loading: boolean = false;
+
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
-    if (this.password !== this.confirmPassword) {
-      alert('Les mots de passe ne correspondent pas');
+    if (this.user.password !== this.user.confirmPassword) {
+      this.error = 'Les mots de passe ne correspondent pas';
       return;
     }
 
-    if (!this.acceptTerms) {
-      alert("Veuillez accepter les conditions d'utilisation");
-      return;
-    }
+    this.loading = true;
+    this.error = '';
 
-    // Ici, vous pouvez ajouter la logique pour envoyer les données au serveur
-    console.log('Formulaire soumis:', {
-      name: this.name,
-      email: this.email,
-      password: this.password,
-      acceptTerms: this.acceptTerms,
-    });
+    this.authService
+      .register({
+        name: this.user.name,
+        email: this.user.email,
+        password: this.user.password,
+      })
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          this.error =
+            err.error.message ||
+            "Une erreur est survenue lors de l'inscription";
+          this.loading = false;
+        },
+      });
   }
 }

@@ -1,53 +1,157 @@
-<main>
-  <!-- Section Landing Page -->
-  <section>
-    <div class="hero-section relative h-[500px] w-auto overflow-hidden">
-      <div class="absolute inset-0 bg-cover bg-center bg-no-repeat">
-        <div class="absolute inset-0 bg-black bg-opacity-50">
-        </div>
-      </div>
-      <div class="relative h-full flex flex-col items-center justify-center text-white px-4">
-        <h1 class="text-5xl font-bold mb-8">image landing page</h1>
+<div class="min-h-screen bg-color-blanc-custom">
+  <!-- Hero Section -->
+  <div
+    class="relative overflow-hidden bg-gradient-to-r from-couleur-accent to-tropical-vibes py-24"
+  >
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="text-center">
+        <h1 class="text-5xl md:text-6xl font-bold text-color-blanc-custom mb-6">
+          Bienvenue sur CocktailRecipes
+        </h1>
+        <p
+          class="text-xl md:text-2xl text-color-blanc-custom mb-8 max-w-3xl mx-auto"
+        >
+          Découvrez nos délicieuses recettes de cocktails et préparez des
+          boissons rafraîchissantes chez vous
+        </p>
+        <a
+          routerLink="/recettes"
+          class="px-8 py-3 bg-couleur-secondaire text-tropical-vibes font-medium rounded-lg hover:bg-opacity-90 transition shadow-lg inline-block"
+        >
+          Voir les recettes
+        </a>
       </div>
     </div>
-  </section>
+    <!-- Decoration elements -->
+    <div class="absolute top-0 left-0 w-full h-full opacity-10">
+      <div
+        class="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-color-blanc-custom"
+      ></div>
+      <div
+        class="absolute top-1/4 right-10 w-20 h-20 rounded-full bg-color-blanc-custom"
+      ></div>
+      <div
+        class="absolute bottom-10 left-1/4 w-30 h-30 rounded-full bg-color-blanc-custom"
+      ></div>
+    </div>
+  </div>
 
-  <!-- Section Recettes du Moment -->
-  <!--
-  <section>
-    <div class="container mx-auto px-4 py-12">
-      <h2 class="text-3xl font-bold text-gray-900 mb-8">Recettes du Moment</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <img
-            [src]="recettes.image"
-            [alt]="recettes.nom"
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">
-              {{ recettes.nom }}
-            </h3>
-            <p class="text-gray-600">{{ recettes.description }}</p>
-          </div>
+  <!-- Features Section -->
+  <div class="container mx-auto px-4 py-16">
+    <h2 class="text-3xl font-bold text-tropical-vibes text-center mb-12">
+      Pourquoi choisir CocktailRecipes?
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <div
+        class="bg-white p-6 rounded-lg shadow-custom border-t-4 border-tropical-vibes"
+      >
+        <div
+          class="w-12 h-12 flex items-center justify-center bg-tropical-vibes text-color-blanc-custom rounded-full mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
+          </svg>
         </div>
+        <h3 class="text-xl font-semibold text-tropical-vibes mb-2">
+          Recettes détaillées
+        </h3>
+        <p class="text-gray-600">
+          Des instructions étape par étape pour préparer les meilleurs
+          cocktails.
+        </p>
       </div>
-  </section>
--->
-  <!-- Section Astuces -->
-  <!--
-  <section>
-    <div class="container mx-auto px-4 py-12">
-      <h2 class="text-3xl font-bold text-gray-900 mb-8">Trucs et Astuces</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">
-              {{ tips.nom }}
-            </h3>
-            <p class="text-gray-600">{{ tips.description }}</p>
-          </div>
+
+      <!-- Feature 2 -->
+      <div
+        class="bg-white p-6 rounded-lg shadow-custom border-t-4 border-couleur-accent"
+      >
+        <div
+          class="w-12 h-12 flex items-center justify-center bg-couleur-accent text-color-blanc-custom rounded-full mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+            />
+          </svg>
         </div>
+        <h3 class="text-xl font-semibold text-couleur-accent mb-2">
+          Conseils d'experts
+        </h3>
+        <p class="text-gray-600">
+          Des astuces de barman professionnels pour impressionner vos invités.
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div
+        class="bg-white p-6 rounded-lg shadow-custom border-t-4 border-couleur-secondaire"
+      >
+        <div
+          class="w-12 h-12 flex items-center justify-center bg-couleur-secondaire text-tropical-vibes rounded-full mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-couleur-secondaire mb-2">
+          Recettes saisonnières
+        </h3>
+        <p class="text-gray-600">
+          De nouvelles recettes ajoutées chaque saison pour varier les plaisirs.
+        </p>
+      </div>
     </div>
-  </section>
-  -->
-</main>
-<!-- <router-outlet /> -->
+  </div>
+
+  <!-- Call to Action -->
+  <div class="bg-tropical-vibes py-12">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold text-color-blanc-custom mb-4">
+        Prêt à commencer?
+      </h2>
+      <p class="text-xl text-color-blanc-custom mb-8 max-w-2xl mx-auto">
+        Explorez notre collection de recettes de cocktails et devenez votre
+        propre barman!
+      </p>
+      <a
+        routerLink="/recettes"
+        class="px-8 py-3 bg-color-blanc-custom text-tropical-vibes font-medium rounded-lg hover:bg-opacity-90 transition shadow-lg inline-block"
+      >
+        Découvrir nos recettes
+      </a>
+    </div>
+  </div>
+</div>
