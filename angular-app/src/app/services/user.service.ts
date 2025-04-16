@@ -1,15 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-interface ApiResponse {
-  data: any[];
-  selector: 'app-admin-dashboard';
-  templateUrl: './admin-dashboard.component.html';
-  standalone: true;
-  imports: [CommonModule];
-}
+import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { GetUsersResponse, User } from '../models/user.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,22 +10,34 @@ interface ApiResponse {
 export class UserService {
   private apiUrl = '/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getUsers(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${this.apiUrl}/users`);
+  getUsers(): Observable<GetUsersResponse> {
+    return this.authService.refreshCsrfToken().pipe(
+      switchMap(() => {
+        return this.http.get<GetUsersResponse>(`${this.apiUrl}/users`, {
+          withCredentials: true,
+        });
+      }),
+      catchError((err) => {
+        console.error('Erreur lors de la récupération des utilisateurs:', err);
+        return throwError(() => err);
+      })
+    );
   }
 
   banUser(id: string): Observable<any> {
     return this.http.post(
-      `http://localhost:8000/api/users/${id}/ban`,
+      `${this.apiUrl}/users/${id}/ban`,
       {},
-      { withCredentials: true }
+      {
+        withCredentials: true,
+      }
     );
   }
 
   deleteUser(id: string): Observable<any> {
-    return this.http.delete(`http://localhost:8000/api/users/${id}`, {
+    return this.http.delete(`${this.apiUrl}/users/${id}`, {
       withCredentials: true,
     });
   }

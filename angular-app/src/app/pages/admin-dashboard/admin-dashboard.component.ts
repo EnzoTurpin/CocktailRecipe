@@ -1,31 +1,58 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
+  imports: [CommonModule],
+  standalone: true,
+  schemas: [NO_ERRORS_SCHEMA],
 })
 export class AdminDashboardComponent implements OnInit {
   users: User[] = [];
 
   constructor(private userService: UserService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadUsers();
   }
 
-  loadUsers() {
-    this.userService.getUsers().subscribe((res) => {
-      this.users = res.data;
+  loadUsers(): void {
+    // Vérification de l'authentification
+    this.userService.getUsers().subscribe({
+      next: (res) => {
+        console.log('Réponse API utilisateurs :', res);
+        this.users = res.data?.users || [];
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des utilisateurs :', err);
+      },
     });
   }
 
-  banUser(id: string) {
-    this.userService.banUser(id).subscribe(() => this.loadUsers());
+  banUser(id: string): void {
+    this.userService.banUser(id).subscribe({
+      next: () => {
+        console.log(`Utilisateur ${id} banni`);
+        this.loadUsers();
+      },
+      error: (err) => {
+        console.error('Erreur lors du bannissement :', err);
+      },
+    });
   }
 
-  deleteUser(id: string) {
-    this.userService.deleteUser(id).subscribe(() => this.loadUsers());
+  deleteUser(id: string): void {
+    this.userService.deleteUser(id).subscribe({
+      next: () => {
+        console.log(`Utilisateur ${id} supprimé`);
+        this.loadUsers();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression :', err);
+      },
+    });
   }
 }

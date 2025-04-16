@@ -1,9 +1,11 @@
 <h2>Liste des utilisateurs</h2>
+
 <table>
   <thead>
     <tr>
       <th>Nom</th>
       <th>Email</th>
+      <th>Type</th>
       <th>Action</th>
     </tr>
   </thead>
@@ -11,6 +13,7 @@
     <tr *ngFor="let user of users">
       <td>{{ user.name }}</td>
       <td>{{ user.email }}</td>
+      <td>{{ user.user_type }}</td>
       <td>
         <button (click)="banUser(user._id)">Bannir</button>
         <button (click)="deleteUser(user._id)">Supprimer</button>
