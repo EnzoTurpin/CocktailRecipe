@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { Router, RouterModule } from '@angular/router';
 import { ScrollService } from '../../services/scroll.service';
 import { AuthService } from '../../services/auth.service';
@@ -206,12 +204,6 @@ export class RecettesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
-  // Rediriger vers la page de connexion
-  redirectToLogin() {
-    this.showErrorModal = false;
-    this.router.navigate(['/login']);
-  }
-
   get filteredRecettes(): Recette[] {
     if (!this.searchTerm) return this.recettes;
     return this.recettes.filter(
@@ -235,7 +227,6 @@ export class RecettesComponent implements OnInit, OnDestroy {
           'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=800&auto=format&fit=crop&q=60',
         difficulty: 'Facile',
         preparationTime: '5 min',
-        isFavorite: false,
       },
       {
         id: 'margarita',
@@ -246,7 +237,6 @@ export class RecettesComponent implements OnInit, OnDestroy {
           'https://images.unsplash.com/photo-1556855810-ac404aa91e85?w=800&auto=format&fit=crop&q=60',
         difficulty: 'Moyen',
         preparationTime: '8 min',
-        isFavorite: false,
       },
       {
         id: 'old-fashioned',
@@ -256,7 +246,6 @@ export class RecettesComponent implements OnInit, OnDestroy {
           'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&auto=format&fit=crop&q=60',
         difficulty: 'Difficile',
         preparationTime: '10 min',
-        isFavorite: false,
       },
     ];
   }
