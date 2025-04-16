@@ -84,7 +84,7 @@ cd angular-app
 npm install
 
 # Démarrer le serveur de développement
-npm run dev
+ng serve
 ```
 
 ### Installation du backend
