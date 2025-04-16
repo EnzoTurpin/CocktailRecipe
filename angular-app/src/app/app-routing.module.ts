@@ -56,6 +56,13 @@ export const routes: Routes = [
         (m) => m.AdminDashboardComponent
       ),
   },
+  {
+    path: 'ajouter-recette',
+    loadComponent: () =>
+      import('./pages/recette-form/recette-form.component').then(
+        (m) => m.RecetteFormComponent
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];
 

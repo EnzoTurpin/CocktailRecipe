@@ -33,7 +33,7 @@ export class RecettesComponent implements OnInit, OnDestroy {
   recettes: Recette[] = [];
 
   constructor(
-    private readonly router: Router,
+    public router: Router,
     private readonly scrollService: ScrollService,
     private readonly authService: AuthService,
     private readonly http: HttpClient,
@@ -226,6 +226,10 @@ export class RecettesComponent implements OnInit, OnDestroy {
           'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=800&auto=format&fit=crop&q=60',
         difficulty: 'Facile',
         preparationTime: '5 min',
+        glass_id: '',
+        category_id: '',
+        garnish: '',
+        mainAlcohol: '',
       },
       {
         id: 'margarita',
@@ -236,6 +240,10 @@ export class RecettesComponent implements OnInit, OnDestroy {
           'https://images.unsplash.com/photo-1556855810-ac404aa91e85?w=800&auto=format&fit=crop&q=60',
         difficulty: 'Moyen',
         preparationTime: '8 min',
+        glass_id: '',
+        category_id: '',
+        garnish: '',
+        mainAlcohol: '',
       },
       {
         id: 'old-fashioned',
@@ -245,6 +253,10 @@ export class RecettesComponent implements OnInit, OnDestroy {
           'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&auto=format&fit=crop&q=60',
         difficulty: 'Difficile',
         preparationTime: '10 min',
+        glass_id: '',
+        category_id: '',
+        garnish: '',
+        mainAlcohol: '',
       },
     ];
   }

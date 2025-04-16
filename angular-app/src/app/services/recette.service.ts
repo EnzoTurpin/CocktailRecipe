@@ -160,7 +160,30 @@ export class RecetteService {
         preparationTime: preparationTime,
         isFavorite: false,
         ingredients: recipe.ingredients || [],
+        glass_id: recipe.glass_id || 'default_glass_id',
+        category_id: recipe.category_id,
+        garnish: recipe.garnish,
+        mainAlcohol: recipe.mainAlcohol,
       };
     });
+  }
+
+  createRecette(recette: Recette): Observable<Recette> {
+    return this.getCSRFToken().pipe(
+      switchMap(() => {
+        return this.http
+          .post<Recette>(`${this.apiUrl}/recipes`, recette, this.httpOptions)
+          .pipe(
+            tap((response) => {
+              console.log('Recette créée avec succès:', response);
+            }),
+            catchError((error) => {
+              console.error('Erreur lors de la création de la recette:', error);
+              // Retourne un objet vide par défaut en cas d'erreur
+              return of({} as Recette);
+            })
+          );
+      })
+    );
   }
 }

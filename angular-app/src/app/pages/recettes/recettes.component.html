@@ -79,6 +79,32 @@
     <h2 class="text-3xl font-bold text-tropical-vibes text-center mb-8">
       Nos Recettes
     </h2>
+    <div class="flex flex-wrap gap-4 mb-8 justify-center">
+      <button
+        class="px-4 py-2 bg-tropical-vibes text-white rounded-full hover:bg-opacity-90 transition"
+        (click)="router.navigate(['/ajouter-recette'])"
+      >
+        Ajouter Recette
+      </button>
+      <button
+        class="px-4 py-2 bg-tropical-vibes text-white rounded-full hover:bg-opacity-90 transition"
+        (click)="router.navigate(['/ajouter-ingredient'])"
+      >
+        Ajouter Ingrédient
+      </button>
+      <button
+        class="px-4 py-2 bg-tropical-vibes text-white rounded-full hover:bg-opacity-90 transition"
+        (click)="router.navigate(['/ajouter-categorie'])"
+      >
+        Ajouter Catégorie
+      </button>
+      <button
+        class="px-4 py-2 bg-tropical-vibes text-white rounded-full hover:bg-opacity-90 transition"
+        (click)="router.navigate(['/ajouter-verre'])"
+      >
+        Ajouter Verre
+      </button>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div
         *ngFor="let recette of filteredRecettes"

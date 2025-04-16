@@ -1,0 +1,93 @@
+<form (ngSubmit)="submit()" #recipeForm="ngForm">
+  <!-- Nom -->
+  <input
+    type="text"
+    [(ngModel)]="recette.name"
+    name="name"
+    placeholder="Nom de la recette"
+    class="border p-2 w-full mb-4 rounded"
+    required
+  />
+
+  <!-- Description -->
+  <textarea
+    [(ngModel)]="recette.description"
+    name="description"
+    placeholder="Description"
+    class="border p-2 w-full mb-4 rounded"
+  ></textarea>
+
+  <!-- Ingrédients -->
+  <label class="block font-semibold mb-2">Ingrédients</label>
+  <div class="space-y-2 mb-4">
+    <div *ngFor="let ingredient of ingredients">
+      <label class="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          [value]="ingredient._id"
+          [(ngModel)]="recette.ingredients"
+          name="ingredients"
+          [checked]="recette.ingredients.includes(ingredient._id)"
+          (change)="toggleIngredient(ingredient._id)"
+        />
+        <span>{{ ingredient.name }}</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Verre -->
+  <label class="block font-semibold mb-2">Verre</label>
+  <select
+    [(ngModel)]="recette.glass_id"
+    name="glass_id"
+    class="border p-2 w-full mb-4 rounded"
+  >
+    <option *ngFor="let verre of glasses" [value]="verre._id">
+      {{ verre.name }}
+    </option>
+  </select>
+
+  <!-- Catégorie -->
+  <label class="block font-semibold mb-2">Catégorie</label>
+  <select
+    [(ngModel)]="recette.category_id"
+    name="category_id"
+    class="border p-2 w-full mb-4 rounded"
+  >
+    <option *ngFor="let cat of categories" [value]="cat._id">
+      {{ cat.name }}
+    </option>
+  </select>
+
+  <!-- Garniture -->
+  <label class="block font-semibold mb-2">Garniture</label>
+  <select
+    [(ngModel)]="recette.garnish"
+    name="garnish"
+    class="border p-2 w-full mb-4 rounded"
+  >
+    <option *ngFor="let ingredient of ingredients" [value]="ingredient.name">
+      {{ ingredient.name }}
+    </option>
+  </select>
+
+  <!-- Alcool Principal -->
+  <label class="block font-semibold mb-2">Alcool Principal</label>
+  <select
+    [(ngModel)]="recette.mainAlcohol"
+    name="mainAlcohol"
+    class="border p-2 w-full mb-4 rounded"
+  >
+    <option *ngFor="let alcool of alcohols" [value]="alcool.name">
+      {{ alcool.name }}
+    </option>
+  </select>
+
+  <!-- Bouton -->
+  <button
+    type="submit"
+    class="bg-tropical-vibes text-white px-4 py-2 rounded mt-4"
+  >
+    Enregistrer
+  </button>
+</form>
