@@ -185,7 +185,3 @@ L'authentification est gérée via des cookies de session et CSRF, ce qui néces
 - [Hénan Noël](https://github.com/HenanAeroo)
 - [Enzo Turpin](https://github.com/EnzoTurpin)
 - [Tyfenn Le Dévéhat](https://github.com/tyfld)
-
-## Licence
-
-Ce projet est sous licence MIT.
