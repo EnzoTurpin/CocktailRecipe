@@ -1,11 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 interface ApiResponse {
-  // Définir la structure de la réponse API
   data: any[];
-  // autres propriétés si nécessaire
+  selector: 'app-admin-dashboard';
+  templateUrl: './admin-dashboard.component.html';
+  standalone: true;
+  imports: [CommonModule];
 }
 
 @Injectable({
@@ -17,7 +20,20 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getUsers(): Observable<ApiResponse> {
-    // Retourner un Observable<ApiResponse>
     return this.http.get<ApiResponse>(`${this.apiUrl}/users`);
+  }
+
+  banUser(id: string): Observable<any> {
+    return this.http.post(
+      `http://localhost:8000/api/users/${id}/ban`,
+      {},
+      { withCredentials: true }
+    );
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete(`http://localhost:8000/api/users/${id}`, {
+      withCredentials: true,
+    });
   }
 }

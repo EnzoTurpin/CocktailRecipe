@@ -49,6 +49,13 @@ export const routes: Routes = [
         (m) => m.CocktailDetailsComponent
       ),
   },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./pages/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];
 
