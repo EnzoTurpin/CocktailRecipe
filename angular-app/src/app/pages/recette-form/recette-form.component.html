@@ -1,93 +1,122 @@
-<form (ngSubmit)="submit()" #recipeForm="ngForm">
-  <!-- Nom -->
-  <input
-    type="text"
-    [(ngModel)]="recette.name"
-    name="name"
-    placeholder="Nom de la recette"
-    class="border p-2 w-full mb-4 rounded"
-    required
-  />
+<div
+  class="min-h-screen bg-color-blanc-custom flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div
+    class="max-w-md w-full space-y-8 bg-white rounded-lg shadow-custom p-8 mb-12"
+  >
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-tropical-vibes">
+      Créer une Recette
+    </h2>
+    <form class="mt-8 space-y-6" (ngSubmit)="submit()" #recipeForm="ngForm">
+      <div class="rounded-md shadow-sm space-y-4">
+        <!-- Nom -->
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="recette.name"
+            name="name"
+            placeholder=" "
+            required
+            class="peer block w-full h-12 px-3 py-3 text-gray-900 bg-transparent border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes"
+          />
+          <label
+            for="name"
+            class="absolute text-sm text-gray-500 duration-150 transform scale-100 top-1/2 -translate-y-1/2 origin-[0] left-2.5 peer-focus:text-tropical-vibes peer-placeholder-shown:scale-100 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-xs peer-focus:top-2 peer-[&:not(:placeholder-shown)]:scale-75 peer-[&:not(:placeholder-shown)]:-translate-y-4 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:top-2 z-10 px-1 bg-white transition-all"
+            >Nom de la recette</label
+          >
+        </div>
 
-  <!-- Description -->
-  <textarea
-    [(ngModel)]="recette.description"
-    name="description"
-    placeholder="Description"
-    class="border p-2 w-full mb-4 rounded"
-  ></textarea>
+        <!-- Description -->
+        <div class="relative">
+          <textarea
+            [(ngModel)]="recette.description"
+            name="description"
+            placeholder=" "
+            class="peer block w-full px-3 py-3 text-gray-900 bg-transparent border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes"
+          ></textarea>
+          <label
+            for="description"
+            class="absolute text-sm text-gray-500 duration-150 transform scale-100 top-1/2 -translate-y-1/2 origin-[0] left-2.5 peer-focus:text-tropical-vibes peer-placeholder-shown:scale-100 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-xs peer-focus:top-2 peer-[&:not(:placeholder-shown)]:scale-75 peer-[&:not(:placeholder-shown)]:-translate-y-4 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:top-2 z-10 px-1 bg-white transition-all"
+            >Description</label
+          >
+        </div>
 
-  <!-- Ingrédients -->
-  <label class="block font-semibold mb-2">Ingrédients</label>
-  <div class="space-y-2 mb-4">
-    <div *ngFor="let ingredient of ingredients">
-      <label class="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          [value]="ingredient._id"
-          [(ngModel)]="recette.ingredients"
-          name="ingredients"
-          [checked]="recette.ingredients.includes(ingredient._id)"
-          (change)="toggleIngredient(ingredient._id)"
-        />
-        <span>{{ ingredient.name }}</span>
-      </label>
-    </div>
+        <!-- Ingrédients -->
+        <div class="relative">
+          <label class="block font-semibold mb-2">Ingrédients</label>
+          <div class="space-y-2 mb-4">
+            <div *ngFor="let ingredient of ingredients">
+              <label class="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  [value]="ingredient._id"
+                  [(ngModel)]="recette.ingredients"
+                  name="ingredients"
+                  [checked]="recette.ingredients?.includes(ingredient._id)"
+                  (change)="toggleIngredient(ingredient._id)"
+                  class="h-4 w-4 text-tropical-vibes focus:ring-0"
+                />
+                <span class="text-sm">{{ ingredient.name }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verre -->
+        <div class="relative">
+          <label class="block font-semibold mb-2">Verre</label>
+          <select
+            [(ngModel)]="recette.glass_id"
+            name="glass_id"
+            class="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes"
+          >
+            <option *ngFor="let verre of glasses" [value]="verre._id">
+              {{ verre.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Catégorie -->
+        <div class="relative">
+          <label class="block font-semibold mb-2">Catégorie</label>
+          <select
+            [(ngModel)]="recette.category_id"
+            name="category_id"
+            class="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes"
+          >
+            <option *ngFor="let cat of categories" [value]="cat._id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Garniture -->
+        <div class="relative">
+          <label class="block font-semibold mb-2">Garniture</label>
+          <select
+            [(ngModel)]="recette.garnish"
+            name="garnish"
+            class="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes"
+          >
+            <option
+              *ngFor="let ingredient of ingredients"
+              [value]="ingredient.name"
+            >
+              {{ ingredient.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Bouton -->
+      <div class="mt-6">
+        <button
+          type="submit"
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tropical-vibes hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tropical-vibes disabled:opacity-50"
+        >
+          Enregistrer
+        </button>
+      </div>
+    </form>
   </div>
-
-  <!-- Verre -->
-  <label class="block font-semibold mb-2">Verre</label>
-  <select
-    [(ngModel)]="recette.glass_id"
-    name="glass_id"
-    class="border p-2 w-full mb-4 rounded"
-  >
-    <option *ngFor="let verre of glasses" [value]="verre._id">
-      {{ verre.name }}
-    </option>
-  </select>
-
-  <!-- Catégorie -->
-  <label class="block font-semibold mb-2">Catégorie</label>
-  <select
-    [(ngModel)]="recette.category_id"
-    name="category_id"
-    class="border p-2 w-full mb-4 rounded"
-  >
-    <option *ngFor="let cat of categories" [value]="cat._id">
-      {{ cat.name }}
-    </option>
-  </select>
-
-  <!-- Garniture -->
-  <label class="block font-semibold mb-2">Garniture</label>
-  <select
-    [(ngModel)]="recette.garnish"
-    name="garnish"
-    class="border p-2 w-full mb-4 rounded"
-  >
-    <option *ngFor="let ingredient of ingredients" [value]="ingredient.name">
-      {{ ingredient.name }}
-    </option>
-  </select>
-
-  <!-- Alcool Principal -->
-  <label class="block font-semibold mb-2">Alcool Principal</label>
-  <select
-    [(ngModel)]="recette.mainAlcohol"
-    name="mainAlcohol"
-    class="border p-2 w-full mb-4 rounded"
-  >
-    <option *ngFor="let alcool of alcohols" [value]="alcool.name">
-      {{ alcool.name }}
-    </option>
-  </select>
-
-  <!-- Bouton -->
-  <button
-    type="submit"
-    class="bg-tropical-vibes text-white px-4 py-2 rounded mt-4"
-  >
-    Enregistrer
-  </button>
-</form>
+</div>

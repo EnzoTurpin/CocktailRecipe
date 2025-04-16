@@ -50,9 +50,7 @@ export class RecetteFormComponent {
     );
   }
 
-  // Méthode pour gérer le changement d'ingrédient
   toggleIngredient(ingredientId: string) {
-    // Vérifier que `ingredients` est défini comme un tableau
     if (!Array.isArray(this.recette.ingredients)) {
       this.recette.ingredients = [];
     }
