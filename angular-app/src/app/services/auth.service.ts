@@ -503,17 +503,15 @@ export class AuthService {
 
   // Méthode pour mettre à jour les données utilisateur
   updateUser(userData: any) {
-    // On synchronise d'abord localement pour une meilleure UX
     const updatedUser = { ...this.currentUser, ...userData };
 
-    // Dans le cas d'une mise à jour de mot de passe, on ne synchronise pas localement
     if (!userData.password) {
       localStorage.setItem('user', JSON.stringify(updatedUser));
       this.currentUser = updatedUser;
       this.userSubject.next(updatedUser);
     }
 
-    // Détection de l'ID (certaines API utilisent '_id', d'autres 'id')
+    // Détection de l'ID
     const userId = this.currentUser._id || this.currentUser.id;
 
     // Debug pour voir l'ID récupéré
@@ -531,9 +529,15 @@ export class AuthService {
       });
     }
 
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
     return this.http
-      .put(`${this.apiUrl}/users/update/${userId}`, userData, {
-        ...this.httpOptions,
+      .put(`${this.apiUrl}/me`, userData, {
+        headers,
         withCredentials: true,
       })
       .pipe(
@@ -542,7 +546,7 @@ export class AuthService {
 
           // Si la mise à jour incluait un mot de passe, on synchronise localement seulement après confirmation
           if (userData.password && response.status === 'success') {
-            delete updatedUser.password; // Ne pas stocker le mot de passe
+            delete updatedUser.password;
             delete updatedUser.password_confirmation;
             localStorage.setItem('user', JSON.stringify(updatedUser));
             this.currentUser = updatedUser;
@@ -552,15 +556,12 @@ export class AuthService {
         catchError((error) => {
           console.error('Erreur lors de la mise à jour du profil:', error);
 
-          // Extraire le message d'erreur détaillé
           let errorMessage = 'Erreur lors de la mise à jour du profil';
 
           if (error.error && error.error.message) {
             errorMessage = error.error.message;
           } else if (error.status === 422) {
-            // Tenter d'extraire les erreurs spécifiques de validation
             if (error.error && error.error.errors) {
-              // Pour les erreurs Laravel qui retournent un objet d'erreurs
               const errorKeys = Object.keys(error.error.errors);
               if (
                 errorKeys.length > 0 &&
@@ -582,11 +583,10 @@ export class AuthService {
 
           console.log("Message d'erreur formaté:", errorMessage);
 
-          // En cas d'erreur, on retourne un objet avec un statut d'erreur
           return of({
             status: 'error',
             message: errorMessage,
-            data: this.currentUser, // Retourner l'utilisateur original en cas d'erreur
+            data: this.currentUser,
           });
         })
       );

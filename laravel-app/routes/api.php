@@ -102,7 +102,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Authentification
     Route::get('/me', [UserController::class, 'show']);
     
-    // Ajouter une route alternative pour gérer les appels à /api/me (les deux routes pointent vers la même action)
     Route::get('/api/me', [UserController::class, 'show']);
     
     Route::put('/me', [UserController::class, 'update']);

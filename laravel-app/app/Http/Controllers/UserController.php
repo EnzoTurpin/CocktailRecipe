@@ -121,7 +121,6 @@ class UserController extends Controller
      */
     private function refreshResponseCookies($request, $response)
     {
-        // Ensure CORS headers are directly added to the response
         if ($request->hasHeader('Origin')) {
             $origin = $request->header('Origin');
             $allowed_origins = config('cors.allowed_origins', []);
@@ -133,12 +132,9 @@ class UserController extends Controller
                 $response->header('Access-Control-Expose-Headers', 'X-XSRF-TOKEN');
             }
         }
-        
-        // Generate a fresh CSRF token for the response
         $xsrfToken = csrf_token();
         
         if ($xsrfToken) {
-            // Set as a cookie with correct parameters
             $isLocalDev = config('app.env') === 'local';
             
             $response->cookie(
@@ -147,13 +143,12 @@ class UserController extends Controller
                 config('session.lifetime', 120),
                 '/',
                 null,
-                !$isLocalDev, // secure - false in local dev
-                false, // httpOnly - must be false so JS can read it
-                false, // raw
-                'none' // sameSite - use 'none' for cross-origin requests
+                !$isLocalDev,
+                false,
+                false,
+                'none'
             );
-            
-            // Also add it as a header (some applications prefer this)
+        
             $response->header('X-XSRF-TOKEN', $xsrfToken);
             
             Log::debug('New CSRF token set in response', [
