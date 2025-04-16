@@ -10,7 +10,20 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getUsers(): Observable<ApiResponse> {
-    // Retourner un Observable<ApiResponse>
     return this.http.get<ApiResponse>('http://localhost:8000/api/users');
+  }
+
+  banUser(id: string): Observable<any> {
+    return this.http.post(
+      `http://localhost:8000/api/users/${id}/ban`,
+      {},
+      { withCredentials: true }
+    );
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete(`http://localhost:8000/api/users/${id}`, {
+      withCredentials: true,
+    });
   }
 }
