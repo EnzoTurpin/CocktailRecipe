@@ -106,6 +106,20 @@
             </option>
           </select>
         </div>
+
+        <!-- Alcool Principal -->
+        <div class="relative">
+          <label class="block font-semibold mb-2">Alcool Principal</label>
+          <select
+            [(ngModel)]="recette.mainAlcohol"
+            name="mainAlcohol"
+            class="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-tropical-vibes focus:border-tropical-vibes"
+          >
+            <option *ngFor="let alcool of alcohols" [value]="alcool.name">
+              {{ alcool.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <!-- Bouton -->
