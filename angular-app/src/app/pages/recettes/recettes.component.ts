@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { Router, RouterModule } from '@angular/router';
 import { ScrollService } from '../../services/scroll.service';
 import { AuthService } from '../../services/auth.service';
@@ -43,6 +45,49 @@ export class RecettesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     window.addEventListener('scroll', this.onScroll.bind(this));
+
+    // Vérifier l'authentification locale sans tenter de logout
+    this.isAuthenticatedLocally = this.authService.isAuthenticated();
+
+    // Activer le mode debug pour voir les données reçues de l'API
+    this.recetteService.getRecettes().subscribe((data: Recette[]) => {
+      console.log("Données reçues de l'API:", data);
+
+      // Condition pour vérifier si les données sont valides
+      if (data && Array.isArray(data) && data.length > 0) {
+        console.log("Mise à jour des recettes avec les données de l'API");
+        this.recettes = data;
+      } else {
+        // Si aucune donnée n'est reçue de l'API, initialiser un tableau vide
+        console.log("Aucune donnée reçue de l'API");
+        this.recettes = [];
+      }
+
+      // Vérifier silencieusement l'authentification côté serveur
+      if (this.isAuthenticatedLocally) {
+        this.checkingAuth = true;
+        this.authService
+          .getUserSilent()
+          .pipe(
+            // Ne jamais laisser cette requête échouer et bloquer la suite
+            catchError((error) => {
+              console.log(
+                "Erreur lors de la vérification silencieuse, on considère l'utilisateur non authentifié côté serveur"
+              );
+              return of(null);
+            })
+          )
+          .subscribe((user) => {
+            this.checkingAuth = false;
+            this.isAuthenticatedOnServer = !!user;
+
+            console.log(
+              "État d'authentification serveur:",
+              this.isAuthenticatedOnServer ? 'Authentifié' : 'Non authentifié'
+            );
+          });
+      }
+    });
 
     // Vérifier l'authentification locale sans tenter de logout
     this.isAuthenticatedLocally = this.authService.isAuthenticated();
@@ -153,6 +198,12 @@ export class RecettesComponent implements OnInit, OnDestroy {
 
     // Naviguer vers la page de détails
     this.router.navigate(['/cocktail', id]);
+  }
+
+  // Rediriger vers la page de connexion
+  redirectToLogin() {
+    this.showErrorModal = false;
+    this.router.navigate(['/login']);
   }
 
   // Rediriger vers la page de connexion
