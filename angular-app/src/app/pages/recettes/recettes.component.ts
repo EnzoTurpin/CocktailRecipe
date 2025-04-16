@@ -1,17 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ScrollService } from '../../services/scroll.service';
-
-interface Recette {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  difficulty: 'Facile' | 'Moyen' | 'Difficile';
-  preparationTime: string;
-}
+import { AuthService } from '../../services/auth.service';
+import { RecetteService } from '../../services/recette.service';
+import { CocktailService } from '../../services/cocktail.service';
+import { Recette } from '../../interfaces/recette.interface';
+import { forkJoin, of } from 'rxjs';
+import { switchMap, catchError, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-recettes',
@@ -25,74 +23,90 @@ export class RecettesComponent implements OnInit, OnDestroy {
   showSuggestions: boolean = false;
   suggestions: Recette[] = [];
   parallaxOffset: number = 0;
+  isAuthenticatedLocally: boolean = false;
+  isAuthenticatedOnServer: boolean = false;
+  checkingAuth: boolean = false;
+  errorMessage: string = '';
+  showErrorModal: boolean = false;
+  sessionExpiredError: boolean = false;
 
-  recettes: Recette[] = [
-    {
-      id: 'mojito',
-      name: 'Mojito',
-      description:
-        'Un cocktail rafraîchissant à base de rhum blanc, menthe fraîche et citron vert.',
-      image:
-        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
-      difficulty: 'Facile',
-      preparationTime: '5 min',
-    },
-    {
-      id: 'pina-colada',
-      name: 'Piña Colada',
-      description:
-        "Un cocktail tropical crémeux à base de rhum blanc, lait de coco et jus d'ananas.",
-      image:
-        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
-      difficulty: 'Facile',
-      preparationTime: '5 min',
-    },
-    {
-      id: 'margarita',
-      name: 'Margarita',
-      description:
-        'Un cocktail mexicain classique à base de tequila, triple sec et jus de citron.',
-      image:
-        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
-      difficulty: 'Moyen',
-      preparationTime: '5 min',
-    },
-    {
-      id: 'old-fashioned',
-      name: 'Old Fashioned',
-      description:
-        'Un cocktail sophistiqué à base de whisky, bitters et sucre.',
-      image:
-        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
-      difficulty: 'Difficile',
-      preparationTime: '5 min',
-    },
-    {
-      id: 'daiquiri',
-      name: 'Daiquiri',
-      description:
-        'Un cocktail cubain classique à base de rhum blanc, jus de citron vert et sucre.',
-      image:
-        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
-      difficulty: 'Facile',
-      preparationTime: '5 min',
-    },
-    {
-      id: 'cosmopolitan',
-      name: 'Cosmopolitan',
-      description:
-        'Un cocktail élégant à base de vodka, triple sec et jus de canneberge.',
-      image:
-        'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&auto=format&fit=crop&q=60',
-      difficulty: 'Moyen',
-      preparationTime: '5 min',
-    },
-  ];
+  recettes: Recette[] = [];
 
-  constructor(private router: Router, private scrollService: ScrollService) {}
+  constructor(
+    private router: Router,
+    private scrollService: ScrollService,
+    private authService: AuthService,
+    private http: HttpClient,
+    private recetteService: RecetteService,
+    private cocktailService: CocktailService
+  ) {}
 
   ngOnInit() {
     window.addEventListener('scroll', this.onScroll.bind(this));
+
+    // Vérifier l'authentification locale sans tenter de logout
+    this.isAuthenticatedLocally = this.authService.isAuthenticated();
+
+    // Activer le mode debug pour voir les données reçues de l'API
+    this.recetteService.getRecettes().subscribe((data: Recette[]) => {
+      console.log("Données reçues de l'API:", data);
+
+      // Condition pour vérifier si les données sont valides
+      if (data && Array.isArray(data) && data.length > 0) {
+        console.log("Mise à jour des recettes avec les données de l'API");
+        // Vérifier et corriger les IDs si nécessaire
+        this.recettes = data.map((recette) => {
+          // Utiliser any pour accéder à la propriété _id qui n'est pas dans l'interface Recette
+          const recetteAny = recette as any;
+          if (!recette.id && recetteAny._id) {
+            recette.id = recetteAny._id;
+          }
+
+          // Débuggons cet objet
+          console.log('Recette après mappage:', recette);
+          console.log('ID de la recette:', recette.id);
+
+          return recette;
+        });
+
+        // Vérifier les recettes après le mappage
+        console.log('Toutes les recettes après mappage:', this.recettes);
+      } else {
+        // Si aucune donnée n'est reçue de l'API, utiliser des données par défaut
+        console.log(
+          "Aucune donnée reçue de l'API, utilisation des données par défaut"
+        );
+        this.recettes = this.getDefaultRecettes();
+
+        // Vérifier les recettes par défaut
+        console.log('Recettes par défaut:', this.recettes);
+      }
+
+      // Vérifier silencieusement l'authentification côté serveur
+      if (this.isAuthenticatedLocally) {
+        this.checkingAuth = true;
+        this.authService
+          .getUserSilent()
+          .pipe(
+            // Ne jamais laisser cette requête échouer et bloquer la suite
+            catchError((error) => {
+              console.log(
+                "Erreur lors de la vérification silencieuse, on considère l'utilisateur non authentifié côté serveur"
+              );
+              return of(null);
+            })
+          )
+          .subscribe((user) => {
+            this.checkingAuth = false;
+            this.isAuthenticatedOnServer = !!user;
+
+            console.log(
+              "État d'authentification serveur:",
+              this.isAuthenticatedOnServer ? 'Authentifié' : 'Non authentifié'
+            );
+          });
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -126,8 +140,25 @@ export class RecettesComponent implements OnInit, OnDestroy {
   }
 
   navigateToCocktail(id: string) {
-    this.scrollService.scrollToTop();
+    console.log('Navigation vers cocktail avec ID:', id);
+
+    // Vérifier si l'ID est défini
+    if (!id) {
+      console.warn(
+        "ID de cocktail non défini, utilisation d'un ID par défaut (mojito)"
+      );
+      // Utiliser un ID par défaut
+      id = 'mojito';
+    }
+
+    // Naviguer vers la page de détails
     this.router.navigate(['/cocktail', id]);
+  }
+
+  // Rediriger vers la page de connexion
+  redirectToLogin() {
+    this.showErrorModal = false;
+    this.router.navigate(['/login']);
   }
 
   get filteredRecettes(): Recette[] {
@@ -139,5 +170,43 @@ export class RecettesComponent implements OnInit, OnDestroy {
           .toLowerCase()
           .includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  // Méthode pour obtenir des recettes par défaut
+  private getDefaultRecettes(): Recette[] {
+    return [
+      {
+        id: 'mojito',
+        name: 'Mojito',
+        description:
+          'Un cocktail rafraîchissant à base de rhum, menthe et citron vert.',
+        image:
+          'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=800&auto=format&fit=crop&q=60',
+        difficulty: 'Facile',
+        preparationTime: '5 min',
+        isFavorite: false,
+      },
+      {
+        id: 'margarita',
+        name: 'Margarita',
+        description:
+          'Cocktail mexicain classique avec tequila, triple sec et jus de citron.',
+        image:
+          'https://images.unsplash.com/photo-1556855810-ac404aa91e85?w=800&auto=format&fit=crop&q=60',
+        difficulty: 'Moyen',
+        preparationTime: '8 min',
+        isFavorite: false,
+      },
+      {
+        id: 'old-fashioned',
+        name: 'Old Fashioned',
+        description: 'Cocktail sophistiqué à base de whisky, sucre et bitters.',
+        image:
+          'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&auto=format&fit=crop&q=60',
+        difficulty: 'Difficile',
+        preparationTime: '10 min',
+        isFavorite: false,
+      },
+    ];
   }
 }
