@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { FavoriteService } from '../../services/favorite.service';
 import { Recette } from '../../interfaces/recette.interface';
 
 @Component({
@@ -56,11 +55,7 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private favoriteService: FavoriteService
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     // Check if user is logged in
@@ -80,10 +75,10 @@ export class ProfileComponent implements OnInit {
     this.userForm.updatePassword = false;
 
     // Chargement des recettes favorites
-    this.loadFavoriteRecipes();
+    // this.loadFavoriteRecipes();
   }
 
-  loadFavoriteRecipes(): void {
+  /* loadFavoriteRecipes(): void {
     this.loadingFavorites = true;
     this.favoriteService.getFavorites().subscribe(
       (favorites: any[]) => {
@@ -109,7 +104,7 @@ export class ProfileComponent implements OnInit {
         console.error('Erreur lors du chargement des favoris:', error);
       }
     );
-  }
+  } 
 
   // Helpers pour déterminer la difficulté et le temps de préparation
   private getDifficulty(recipe: any): 'Facile' | 'Moyen' | 'Difficile' {
@@ -130,7 +125,7 @@ export class ProfileComponent implements OnInit {
     if (ingredientCount <= 3 && instructionsLength < 200) return '5 min';
     if (ingredientCount <= 6 && instructionsLength < 500) return '10 min';
     return '15+ min';
-  }
+  } */
 
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
@@ -315,7 +310,7 @@ export class ProfileComponent implements OnInit {
   }
 
   // Retirer de favoris
-  removeFavorite(recipeId: string): void {
+  /* removeFavorite(recipeId: string): void {
     this.favoriteService.toggleFavorite(recipeId).subscribe(
       (response) => {
         console.log('Réponse du serveur lors de la suppression:', response);
@@ -332,7 +327,7 @@ export class ProfileComponent implements OnInit {
         setTimeout(() => (this.errorMessage = ''), 3000);
       }
     );
-  }
+  }*/
 
   // Navigation vers une recette
   navigateToRecipe(id: string): void {
